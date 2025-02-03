@@ -57,6 +57,6 @@ struct OtherInfoCardView: View {
     }
 }
 
-//#Preview {
-//    OtherInfoCardView()
-//}
+#Preview {
+    OtherInfoCardView(homeViewModel: HomeViewModel())
+}

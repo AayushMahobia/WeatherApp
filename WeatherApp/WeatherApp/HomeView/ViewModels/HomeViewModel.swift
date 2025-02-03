@@ -41,6 +41,8 @@ class HomeViewModel: ObservableObject {
         }
     }
     
+    
+    // Helper Function
     func getCityName() -> String {
         weatherData?.city.name ?? "N/A"
     }
@@ -62,53 +64,18 @@ class HomeViewModel: ObservableObject {
         let imageURLString = "https://openweathermap.org/img/wn/\(iconID)@2x.png"
         return URL(string: imageURLString)
     }
+    
+    func formatDate(_ dateString: String, inputFormat: String, outputFormat: String) -> String {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = inputFormat
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = outputFormat
+
+        guard let date = inputFormatter.date(from: dateString) else {
+            return ""
+        }
+        
+        return outputFormatter.string(from: date)
+    }
 }
-
-
-
-
-
-//    func fetchWeatherData() {
-//        guard let url = URL(string: apiURL) else {
-//            self.errorMessage = "Invalid URL"
-//            print(self.errorMessage ?? "some error 1")
-//            return
-//        }
-//
-//        isLoading = true
-//        errorMessage = nil
-//
-//        URLSession.shared.dataTask(with: url) { data, response, error in
-//            DispatchQueue.main.async {
-//                self.isLoading = false
-//            }
-//
-//            if let error = error {
-//                DispatchQueue.main.async {
-//                    self.errorMessage = "Error: \(error.localizedDescription)"
-//                }
-//                print(self.errorMessage ?? "some error 2")
-//                return
-//            }
-//
-//            guard let data = data else {
-//                DispatchQueue.main.async {
-//                    self.errorMessage = "No data received"
-//                }
-//                print(self.errorMessage ?? "some error 3")
-//                return
-//            }
-//
-//            do {
-//                let decodedData = try JSONDecoder().decode(Welcome.self, from: data)
-//                DispatchQueue.main.async {
-//                    self.weatherData = decodedData
-//                }
-//            } catch {
-//                DispatchQueue.main.async {
-//                    self.errorMessage = "Failed to decode data: \(error.localizedDescription)"
-//                    self.isLoading = false
-//                }
-//            }
-//        }.resume()
-//    }

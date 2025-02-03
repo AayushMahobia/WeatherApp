@@ -24,6 +24,6 @@ struct MapCardView: View {
     }
 }
 
-//#Preview {
-//    MapCardView()
-//}
+#Preview {
+    MapCardView(homeViewModel: HomeViewModel())
+}

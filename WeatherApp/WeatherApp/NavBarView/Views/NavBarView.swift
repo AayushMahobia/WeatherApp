@@ -21,7 +21,7 @@ struct NavBarView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundStyle(.white)
-                    Text(homeViewModel.weatherData?.list[0].dtTxt ?? "Some Date")
+                    Text(homeViewModel.formatDate(homeViewModel.weatherData?.list[0].dtTxt ?? "", inputFormat: "yyyy-MM-dd HH:mm:ss", outputFormat: "d MMMM, EEEE"))
                         .font(.system(size: 14))
                         .foregroundStyle(.gray)
                         .fontWeight(.semibold)
@@ -33,7 +33,7 @@ struct NavBarView: View {
                     .overlay {
                         Image(systemName: "square.grid.2x2.fill")
                             .font(.title3)
-                            .foregroundStyle(Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
+                            .foregroundStyle(.white)
                     }
             }
         }

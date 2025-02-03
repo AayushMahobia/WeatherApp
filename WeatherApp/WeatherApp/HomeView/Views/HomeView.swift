@@ -20,17 +20,21 @@ struct HomeView: View {
             // foreground
             VStack(spacing: 25){
                 NavBarView(homeViewModel: homeViewModel)
+                    .padding(.horizontal, 16)
                 ScrollView {
                     VStack(spacing: 25){
                         TempCardView(homeViewModel: homeViewModel)
+                            .padding(.horizontal, 16)
                         OtherInfoCardView(homeViewModel: homeViewModel)
-                        PickDayView()
+                            .padding(.horizontal, 16)
+                        PickDayView(homeViewModel: homeViewModel)
+                            .padding(.leading, 16)
                         MapCardView(homeViewModel: homeViewModel)
+                            .padding(.horizontal, 16)
                     }
                 }
                 .scrollIndicators(.hidden)
             }
-            .padding()
             .redactionShimmerViewModifier(isLoading: $homeViewModel.isLoading)
         }
         .onAppear {
