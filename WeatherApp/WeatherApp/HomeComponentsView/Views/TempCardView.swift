@@ -39,11 +39,6 @@ struct TempCardView: View {
             .padding(.horizontal, 20)
         }
         .frame(height: 110)
-//        .onAppear{
-//            Task{
-//                await homeViewModel.fetchWeatherData()
-//            }
-//        }
     }
 }
 

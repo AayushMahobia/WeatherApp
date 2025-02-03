@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct PickDayView: View {
-    
-    @State var selectedTab: String = "Today"
-    @State var options: [String] = ["Today", "Tomorrow", "Next 10 days"]
+    @StateObject var pickDayViewModel: PickDayViewModel = PickDayViewModel()
+    @ObservedObject var homeViewModel: HomeViewModel
     
     var body: some View {
         ZStack(alignment: .top){
@@ -20,38 +19,55 @@ struct PickDayView: View {
                 
                 // Tabs
                 HStack(spacing: 25){
-                    ForEach(options, id: \.self) { option in
+                    ForEach(pickDayViewModel.options.indices, id: \.self) { index in
                         VStack(spacing: 6) {
-                            Text(option)
+                            Text(pickDayViewModel.options[index])
                                 .onTapGesture {
-                                    selectedTab = option
+                                    pickDayViewModel.selectedTab = index
+                                    if index == 2{
+                                        pickDayViewModel.dailyTemperatureRange = pickDayViewModel.getDailyTemperatureRange(for: homeViewModel.weatherData?.list ?? [])
+                                    } else{
+                                        pickDayViewModel.dayWeatherData = pickDayViewModel.getWeatherData(for: pickDayViewModel.selectedTab, from: homeViewModel.weatherData?.list ?? [])
+                                    }
                                 }
                                 .font(.headline)
-                                .foregroundStyle(selectedTab == option ? .white : .gray)
+                                .foregroundStyle(pickDayViewModel.selectedTab == index ? .white : .gray)
                             Image(systemName: "circle.fill")
                                 .font(.system(size: 6))
-                                .foregroundStyle(selectedTab == option ? .white : Color(#colorLiteral(red: 0.1058823529, green: 0.1137254902, blue: 0.1215686275, alpha: 1)))
+                                .foregroundStyle(pickDayViewModel.selectedTab == index ? .white : Color(#colorLiteral(red: 0.1058823529, green: 0.1137254902, blue: 0.1215686275, alpha: 1)))
                         }
                     }
                     Spacer()
                 }
+
                 
                 // Cards
                 ScrollView(.horizontal){
                     HStack(spacing: 15){
-                        ForEach(0..<5){ _ in
-                            HourCardView()
+                        if pickDayViewModel.selectedTab == 2{
+                            ForEach(pickDayViewModel.dailyTemperatureRange.sorted(by: { $0.key < $1.key }), id: \.key) { day, range in
+                                DayCardView(homeViewModel: homeViewModel ,day: day, range: range)
+                            }
+                        } else{
+                            ForEach(pickDayViewModel.dayWeatherData, id: \.dt) { dayWeather in
+                                HourCardView(homeViewModel: homeViewModel ,dayWeather: dayWeather)
+                            }
                         }
                     }
                 }
                 .scrollIndicators(.hidden)
+                
             }
         }
         .frame(height: 200)
         .padding(.top, 10)
+        .onAppear(){
+            pickDayViewModel.selectedTab = 0
+            pickDayViewModel.dayWeatherData = pickDayViewModel.getWeatherData(for: pickDayViewModel.selectedTab, from: homeViewModel.weatherData?.list ?? [])
+        }
     }
 }
 
-//#Preview {
-//    PickDayView()
-//}
+#Preview {
+    PickDayView(homeViewModel: HomeViewModel())
+}
