@@ -22,9 +22,11 @@ class HomeViewModel: ObservableObject {
             print(self.errorMessage ?? "some error (url)")
             return
         }
-
-        isLoading = true
-        errorMessage = nil
+        
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
+        }
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
